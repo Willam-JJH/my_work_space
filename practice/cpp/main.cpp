@@ -19,6 +19,7 @@ void init()
 void solve()
 {
     ll n, m;
+    scanf("%lld %lld", &n, &m);
 }
 
 int main()
