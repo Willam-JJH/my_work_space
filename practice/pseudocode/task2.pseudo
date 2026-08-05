@@ -1,0 +1,60 @@
+DECLARE Evening : ARRAY[1:10, 1:20] OF BOOLEAN
+DECLARE B : INTEGER
+DECLARE N : INTEGER
+// 1) INPUT B and mark the first B seats (row by row) as TRUE  (grader setup).
+// 2) count booked seats and OUTPUT "Booked: ", count
+// 3) INPUT N; validate 1..4; if enough available, book N seats in order and
+//    OUTPUT "Row ", r, " Seat ", s for each; else "House full" or "<n> seats left".
+
+DECLARE i : INTEGER
+DECLARE j : INTEGER
+i <- 0
+j <- 0
+
+INPUT B
+OUTPUT "Booked: ", B
+
+INPUT N
+DECLARE save : INTEGER
+save <- B
+
+WHILE B > 0 AND i <= 10 DO
+    j <- 1
+    i <- i + 1
+    WHILE B > 0 AND j <= 20 DO
+        Evening[i,j] <- TRUE
+        j <- j + 1
+        B <- B-1
+    ENDWHILE
+ENDWHILE
+
+IF N < 1 OR N > 4
+  THEN
+    OUTPUT "Invalid number"
+  ELSE
+    IF save + N <= 200
+      THEN
+        IF save = 0
+          THEN
+            i <- 1
+            j <- 1
+        ENDIF
+        WHILE N > 0 AND i <= 10 DO
+            WHILE N > 0 AND j <= 20 DO
+                OUTPUT "Row ", i, " Seat ", j
+                Evening[i,j] <- TRUE
+                j <- j + 1
+                N <- N - 1
+            ENDWHILE
+            j <- 1
+            i <- i + 1
+        ENDWHILE
+      ELSE
+        IF save = 200
+          THEN
+            OUTPUT "House full"
+          ELSE
+            OUTPUT (200 - save), " seats left"
+        ENDIF
+    ENDIF
+ENDIF

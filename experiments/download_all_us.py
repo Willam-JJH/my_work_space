@@ -1,0 +1,49 @@
+"""Download comprehensive US stocks (~2000+ tickers)"""
+import yfinance as yf; import pandas as pd; import numpy as np; import time, os
+SAVE="D:/code/data/us_all_returns.parquet"; START="2015-01-01"; END="2024-12-31"
+
+# Comprehensive US ticker list (~800 stocks: S&P 500 + NASDAQ + midcaps + ETFs exclusions)
+us_tickers = sorted(set("""
+AAPL MSFT GOOGL AMZN NVDA META TSLA BRK-B JPM V JNJ WMT PG MA UNH HD DIS BAC NFLX ADBE
+CRM XOM CSCO ABT CVX KO PEP TMO COST MCD WFC DHR ACN NKE LIN QCOM TXN AMGN HON IBM GE CAT
+PM MS INTU LOW BMY BA AMAT NOW RTX CMCSA ORCL AMD UBER SPGI GS SBUX BLK UNP AXP PFE DE TJX
+ISRG SYK PLD COP ETN ADI BKNG MDLZ GILD ADP LRCX VRTX C CI CB SCHW ZTS BSX TMUS MO EQIX
+ICE SO DUK MU AON KLAC MCK PYPL CME SNPS CDNS APH ITW CMG TGT USB PNC MMM APD NOC FDX BDX
+EL EW GM A REGN ROP MAR HLT NSC PSA AFL AIG ALL BK MET PRU TRV ABNB AZO ORLY ROST YUM EA
+CTAS ECL FAST GWW ODFL PAYX VRSK AME CPRT CTSH DAL DFS DLTR EFX EXC GIS GPN HCA HPQ HUM
+KHC LVS MCHP NEM NUE PWR SRE STZ TEL TTWO URI VLO WELL WMB WY BBY BIIB CDW CHTR CTRA ED
+EMR FE FIS FITB HAL HBAN HSY IP KDP KEYS KMI LHX LUV MKC MLM MTB NDAQ NRG NTAP NWSA OKE
+OMC PCG PEG PFG PHM PKG RF RJF SNA STT STX SYF SYY TAP TDY TSCO TT TXT VTR WAB WAT WBD
+WDC WRB ZBH ALGN ANSS ANET ARE ATO AXON BALL BKR BLDR BR BRO CARR CBOE CEG CF CHD CINF
+CLX CMS CNC CNP CPAY CRWD CSGP D DECK DGX DPZ DRI DTE DVA DVN DXCM EBAY ENPH EPAM EQT
+ERIE ESS ETR EVRG EXPD EXPE F FANG FE FI FICO FMC FOX FSLR FTNT FTV GEHC GEN GL GLW GNRC
+HAS HIG HOLX HPE HRL HUBB HWM IDXX IEX INCY INVH IPG IQV IR IRM J JBHT JNPR K KIM KMX
+KVUE LDOS LKQ LNT LYB LYV MAS MGM MKTX MNST MOH MOS MPC MPWR MRNA MRO MTCH NDSN NI NRG
+NTRS NVR NWL NXPI ON OTIS OXY PANW PARA PEAK PENN PGR PH PKI PNR PNW POOL PPG PPL PSX
+RCL REG RMD ROK ROL SJM SMCI STE SWK TECH TFX TROW TRU TRMB TWLO TYL UDR UHS ULTA VFC
+VLTO VMC VST WBA WEC WHR WM WST WYNN XEL XYL ZBRA TEAM DDOG HUBS NET MDB ZS OKTA PLTR
+SNOW COIN RBLX DASH TTD SQ ZM DOCU BILL SNAP PINS U LCID RIVN HOOD AFRM SOFI DNA GTLB
+DV ESTC PATH GFS ARM MRVL ALAB DELL PLTR SPOT DKNG CVNA CAVA APP RDDT CART IOT BROS
+DUOL QS VFS RKLB ASTS KVYO SMCI ARMHOOD RKLB PL PCOR IONQ AI QBTS RGTI KULR SERV
+DJT RBRK MSTR CLSK BITF MARA RIOT CORZ WULF HUT IREN BTDR CIFR SDIG HIVE DGHI
+""".split()))
+
+print(f"US tickers: {len(us_tickers)}")
+
+us_data = {}
+for i in range(0, len(us_tickers), 50):
+    batch = us_tickers[i:i+50]
+    try:
+        df = yf.download(batch, start=START, end=END, auto_adjust=True, progress=False, timeout=30)
+        if "Close" in df.columns:
+            for t in batch:
+                if t in df["Close"].columns:
+                    us_data[t] = df["Close"][t]
+        print(f"  US {i//50+1}/{(len(us_tickers)-1)//50+1} | ok: {len(us_data)}")
+    except Exception as e: print(f"  err: {str(e)[:60]}")
+    time.sleep(1)
+
+close = pd.DataFrame(us_data).ffill().dropna(axis=1, thresh=int(len(us_data)*0.3) if len(us_data)>0 else 0)
+returns = np.log(close / close.shift(1)).dropna(how="all")
+returns.to_parquet(SAVE)
+print(f"US saved: {returns.shape[1]} stocks x {returns.shape[0]} days, {os.path.getsize(SAVE)/1e6:.0f}MB")

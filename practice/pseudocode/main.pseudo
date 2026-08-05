@@ -1,0 +1,97 @@
+DECLARE Contacts : ARRAY[1:100, 1:2] OF STRING // name & phone number
+DECLARE CurrentSize : INTEGER
+DECLARE Choice : INTEGER
+CurrentSize <- 0
+// Loop: output the menu line, INPUT Choice, act on it; stop when Choice = 4.
+// 1 = add (ask how many 1-5, max 100 total, then sort by name); 2 = display; 3 = delete all.
+// Use the EXACT prompts and messages from the task description.
+
+// FUNCTION Check(String1 : STRING, String2 : STRING) RETURNS BOOLEAN
+//     IF String1 > String2
+//       THEN
+//         RETURN TRUE
+//     ELSE
+//         RETURN FALSE
+//     ENDIF
+// ENDFUNCTION
+
+PROCEDURE Sort()
+    FOR i <- 1 TO CurrentSize - 1
+        FOR j <- 1 TO CurrentSize - i
+            IF Contacts[j, 1] > Contacts[j + 1, 1]
+              THEN
+                DECLARE Temp : STRING
+                Temp <- Contacts[j, 1]
+                Contacts[j, 1] <- Contacts[j + 1, 1]
+                Contacts[j + 1, 1] <- Temp
+                Temp <- Contacts[j, 2]
+                Contacts[j, 2] <- Contacts[j + 1, 2]
+                Contacts[j + 1, 2] <- Temp
+            ENDIF
+        NEXT j
+    NEXT i
+ENDPROCEDURE
+
+PROCEDURE AddNewContacts()
+    DECLARE NumToAdd : INTEGER
+    OUTPUT "How many to add (1-5)?"
+    INPUT NumToAdd
+    IF NumToAdd < 1 OR NumToAdd > 5
+      THEN
+        OUTPUT "Number must be 1 to 5"
+      ELSE
+        IF CurrentSize + NumToAdd > 100
+          THEN
+            OUTPUT "Cannot exceed 100 contacts"
+          ELSE
+            FOR i <- 1 TO NumToAdd
+                DECLARE Name : STRING
+                DECLARE Phone : STRING
+                OUTPUT "Enter name (last, first):"
+                INPUT Name
+                OUTPUT "Enter telephone:"
+                INPUT Phone
+                CurrentSize <- CurrentSize + 1
+                Contacts[CurrentSize, 1] <- Name
+                Contacts[CurrentSize, 2] <- Phone
+            NEXT i
+            IF CurrentSize > 1
+              THEN
+                CALL Sort()
+            ENDIF
+            OUTPUT "Added"
+        ENDIF
+    ENDIF
+ENDPROCEDURE
+
+PROCEDURE DisplayContacts()
+    IF CurrentSize = 0 THEN
+        OUTPUT "No contacts"
+    ELSE
+        CALL Sort()
+        FOR i <- 1 TO CurrentSize
+            OUTPUT Contacts[i, 1], " - ", Contacts[i, 2]
+        NEXT i
+    ENDIF
+ENDPROCEDURE
+
+PROCEDURE DeleteAllContacts()
+    CurrentSize <- 0
+    OUTPUT "All contacts deleted"
+ENDPROCEDURE
+
+PROCEDURE Exit()
+    Choice <- 4
+ENDPROCEDURE
+
+REPEAT
+    OUTPUT "MENU: 1=Add 2=Display 3=Delete 4=Exit"
+    INPUT Choice
+    CASE OF Choice
+        1: CALL AddNewContacts()
+        2: CALL DisplayContacts()
+        3: CALL DeleteAllContacts()
+        4: CALL Exit()
+        OTHERWISE: OUTPUT "Invalid choice"
+    ENDCASE
+UNTIL Choice = 4

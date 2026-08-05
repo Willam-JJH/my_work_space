@@ -1,0 +1,58 @@
+
+============================================================
+  OPTIMIZED META-TRANSFORMER
+============================================================
+
+==================================================
+  US: loading 200 stocks
+==================================================
+  200 stocks x 6288d | Train:3503 Val:1258 Test:1257
+  Computing signatures (batched, no path tensor)...
+    sig chunk 1/95
+    sig chunk 11/95
+    sig chunk 21/95
+    sig chunk 31/95
+    sig chunk 41/95
+    sig chunk 51/95
+    sig chunk 61/95
+    sig chunk 71/95
+    sig chunk 81/95
+    sig chunk 91/95
+  Sigs in 54s (batched)
+  SlimMetaTrans: 1,235,529 params
+    Epoch  10 | Loss: 0.006623 | Val: 0.022114
+    Epoch  20 | Loss: 0.005153 | Val: 0.023048
+  Best val MSE: 0.011810
+
+==================================================
+  CN: loading 200 stocks
+==================================================
+  200 stocks x 6019d | Train:3318 Val:1219 Test:1212
+  Computing signatures (batched, no path tensor)...
+    sig chunk 1/90
+    sig chunk 11/90
+    sig chunk 21/90
+    sig chunk 31/90
+    sig chunk 41/90
+    sig chunk 51/90
+    sig chunk 61/90
+    sig chunk 71/90
+    sig chunk 81/90
+  Sigs in 50s (batched)
+  SlimMetaTrans: 1,235,529 params
+    Epoch  10 | Loss: 0.018166 | Val: 0.039339
+    Epoch  20 | Loss: 0.011087 | Val: 0.045378
+  Best val MSE: 0.033662
+
+=================================================================
+  FINAL RESULTS
+=================================================================
+
+  US (200 stocks, sig=39d)
+  Meta-Transformer: MSE=0.024281  Model r=0.4860  |Pred| r=0.4880
+  vs |Pred|: -0.0021
+
+  CN (200 stocks, sig=39d)
+  Meta-Transformer: MSE=0.036730  Model r=0.1175  |Pred| r=0.6555
+  vs |Pred|: -0.5381
+=================================================================
