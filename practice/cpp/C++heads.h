@@ -1,4 +1,5 @@
 #include <unordered_map>
+#include <functional>
 #include <windows.h>
 #include <algorithm>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include <cstdlib>
 #include <utility>
 #include <cstdint>
+#include <numeric>
 #include <string>
 #include <vector>
 #include <cmath>

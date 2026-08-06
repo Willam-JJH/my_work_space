@@ -1,9 +1,12 @@
-#include <bits/stdc++.h>
+#include "C++heads.h"
+// #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef double dou;
 typedef string str;
 typedef pair<ll, ll> pll;
+#define lowbit(x) (x & -x)
+
 #define pb push_back
 // pl/pr 用于快速获取子节点编号（基于完全二叉树的数组表示）
 // pl(p) -> 左子节点 = p << 1

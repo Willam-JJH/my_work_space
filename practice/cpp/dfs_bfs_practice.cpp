@@ -1,9 +1,11 @@
-#include <bits/stdc++.h>
+#include "C++heads.h"
+// #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef double dou;
 typedef string str;
 typedef pair<ll, ll> pll;
+#define lowbit(x) (x & -x)
 
 const int N = 1e3 + 9;
 
@@ -14,7 +16,8 @@ ll u, v, w;
 ll dis[N];
 bool vis[N];
 
-struct node{
+struct node
+{
     ll v, w;
 };
 
@@ -30,7 +33,8 @@ void dij(ll s)
         ll u = -1;
         for (int j = 1; j <= n; j++)
         {
-            if(!vis[j]){
+            if (!vis[j])
+            {
                 if (u == -1 || dis[j] < dis[u])
                     u = j;
             }

@@ -1,4 +1,5 @@
-#include <bits/stdc++.h>
+#include "C++heads.h"
+// #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef double dou;
@@ -52,7 +53,7 @@ int main()
     for (int i = 1; i < n; i++)
     {
         cin >> s[i];
-        str nows=s[i];
+        str nows = s[i];
         nows += s[i + 1];
         init(nows);
     }

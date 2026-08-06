@@ -1,13 +1,11 @@
-#include <iostream>
-#include <vector>
-#include <cstring>
-#include <string>
-#include <utility>
+#include "C++heads.h"
+// #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef double dou;
 typedef string str;
 typedef pair<ll, ll> pll;
+#define lowbit(x) (x & -x)
 
 const int N = 5e3 + 10;
 
